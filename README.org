@@ -2,3 +2,21 @@
 
 #+TITLE: README for Guile-Netpbm
 
+* Official Netpbm documentation
+
+  [[http://netpbm.sourceforge.net/doc/index.html][Here]]
+
+* Usage
+
+#+BEGIN_SRC scheme
+  (use-module (netpbm pbm))
+
+  (define my-image (make-pbm-image 100 100))
+
+  ;; Do some drawing
+
+  (call-with-output-file
+      filename
+    (lambda (p)
+      (write-pbm-image my-image p)))
+#+END_SRC
