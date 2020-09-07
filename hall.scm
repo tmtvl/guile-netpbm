@@ -24,5 +24,4 @@
             (text-file "HACKING")
             (text-file "COPYING")
             (directory "doc" ((texi-file "guile-netpbm")))))
-         (infrastructure
-           ((scheme-file "guix") (scheme-file "hall")))))
+         (infrastructure ((scheme-file "hall")))))
