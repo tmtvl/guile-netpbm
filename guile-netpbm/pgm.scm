@@ -1,7 +1,7 @@
 (define-module (netpbm pgm)
   #:use-module (ice-9 binary-ports)
   #:use-module (ice-9 textual-ports)
-  #:use-module (netbpm image)
+  #:use-module (netpbm image)
   #:use-module (rnrs bytevectors)
   #:export (make-pgm-image write-pgm-image))
 

@@ -1,4 +1,4 @@
-(define-module (netbpm image)
+(define-module (netpbm image)
   #:use-module (srfi srfi-9)
   #:export (make-image
 	    image?

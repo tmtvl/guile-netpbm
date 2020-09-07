@@ -23,25 +23,6 @@
             (symlink "README" "README.org")
             (text-file "HACKING")
             (text-file "COPYING")
-            (directory "doc" ((texi-file "guile-netpbm")))
-            (text-file "NEWS")
-            (text-file "AUTHORS")
-            (text-file "ChangeLog")
-            (text-file "NEWS")
-            (text-file "AUTHORS")
-            (text-file "ChangeLog")))
+            (directory "doc" ((texi-file "guile-netpbm")))))
          (infrastructure
-           ((scheme-file "guix")
-            (scheme-file "hall")
-            (directory
-              "build-aux"
-              ((scheme-file "test-driver")))
-            (autoconf-file "configure")
-            (automake-file "Makefile")
-            (in-file "pre-inst-env")
-            (directory
-              "build-aux"
-              ((scheme-file "test-driver")))
-            (autoconf-file "configure")
-            (automake-file "Makefile")
-            (in-file "pre-inst-env")))))
+           ((scheme-file "guix") (scheme-file "hall")))))

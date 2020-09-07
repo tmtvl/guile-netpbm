@@ -1,7 +1,7 @@
 (define-module (netpbm pbm)
   #:use-module (ice-9 binary-ports)
   #:use-module (ice-9 textual-ports)
-  #:use-module (netbpm image)
+  #:use-module (netpbm image)
   #:export (make-pbm-image write-pbm-image))
 
 (define *pbm-magic-number* "P4")
