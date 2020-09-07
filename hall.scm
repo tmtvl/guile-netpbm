@@ -12,11 +12,12 @@
   (files (libraries
            ((directory
               "guile-netpbm"
-              ((scheme-file "pgm")
-               (scheme-file "pbm")
-               (scheme-file "ppm")))))
-         (tests ((directory "tests" ())))
-         (programs ((directory "scripts" ())))
+              ((scheme-file "image")
+               (scheme-file "ppm")
+               (scheme-file "pgm")
+               (scheme-file "pbm")))))
+         (tests ())
+         (programs ())
          (documentation
            ((org-file "README")
             (symlink "README" "README.org")
@@ -25,10 +26,19 @@
             (directory "doc" ((texi-file "guile-netpbm")))
             (text-file "NEWS")
             (text-file "AUTHORS")
+            (text-file "ChangeLog")
+            (text-file "NEWS")
+            (text-file "AUTHORS")
             (text-file "ChangeLog")))
          (infrastructure
            ((scheme-file "guix")
             (scheme-file "hall")
+            (directory
+              "build-aux"
+              ((scheme-file "test-driver")))
+            (autoconf-file "configure")
+            (automake-file "Makefile")
+            (in-file "pre-inst-env")
             (directory
               "build-aux"
               ((scheme-file "test-driver")))
