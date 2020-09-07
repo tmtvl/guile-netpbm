@@ -15,14 +15,14 @@
 
 (define (bools-to-u8s bools nums)
   (do ((i 0 (1+ i))
-       (j 0 (floor (/ i 8)))
        (l (car (array-dimensions bools)))
        (n 1 (expt 2 (- 7
 		       (remainder i 8)))))
       ((>= i l))
     (if (array-ref bools i)
-	(let ((val (+ (array-ref nums j)
-		      n)))
+	(let* ((j (floor (/ i 8)))
+	       (val (+ (array-ref nums j)
+		       n)))
 	  (array-set! nums val j)))))
 
 (define (pbm-raster-to-u8-array raster)
