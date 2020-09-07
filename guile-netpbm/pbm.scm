@@ -1,55 +1,49 @@
 (define-module (netpbm pbm)
   #:use-module (ice-9 binary-ports)
   #:use-module (ice-9 textual-ports)
-  #:use-module (srfi srfi-43)
+  #:use-module (netbpm image)
   #:export (make-pbm-image write-pbm-image))
 
 (define *pbm-magic-number* "P4")
 
-(define bit-values '(128 64 32 16 8 4 2 1))
-
 (define (make-pbm-image width height)
-  (list *pbm-magic-number*
-	(cons width height)
-	(make-vector
-	 height (make-bitvector width #f))))
+  (make-image *pbm-magic-number*
+	      width
+	      height
+	      #f
+	      (make-array #f height width)))
 
-(define (pad-bitvector vec)
-  (let ((add (- 8
-		(remainder (bitvector-length vec)
-			   8))))
-    (list->bitvector
-     (append (bitvector->list vec)
-	     (make-list add #f)))))
+(define (bools-to-u8s bools nums)
+  (do ((i 0 (1+ i))
+       (j 0 (floor (/ i 8)))
+       (l (car (array-dimensions bools)))
+       (n 1 (expt 2 (- 7
+		       (remainder i 8)))))
+      ((>= i l))
+    (if (array-ref bools i)
+	(let ((val (+ (array-ref nums j)
+		      n)))
+	  (array-set! nums val j)))))
 
-(define (bitvector->u8 vec)
-  (define (split-and-sum lst)
-    (if (null? lst)
-	'()
-	(cons (apply +
-		     (map (lambda (bit val)
-			    (if bit val 0))
-			  (list-head lst 8)
-			  bit-values))
-	      (split-and-sum (list-tail lst 8)))))
-  (split-and-sum (bitvector->list vec)))
+(define (pbm-raster-to-u8-array raster)
+  (let* ((dims (array-dimensions raster))
+	 (width (ceiling (/ (cadr dims) 8)))
+	 (u8a (make-typed-array 'u8 0 (car dims) width)))
+    (array-slice-for-each
+     1 bools-to-u8s
+     raster u8a)
+    u8a))
 
 (define (write-pbm-image image port)
-  (let ((magic-number (car image))
-	(width (number->string (caadr image)))
-	(height (number->string (cdadr image)))
-	(vecs (caddr image)))
-    (put-string port magic-number)
-    (put-char port #\newline)
-    (put-string port width)
-    (put-char port #\space)
-    (put-string port height)
-    (put-char port #\newline)
-    (vector-for-each
-     (lambda (i vec)
-       (for-each (lambda (x)
-		   (put-u8 port x))
-		 (bitvector->u8 (pad-bitvector vec))))
-     vecs)
-    (put-char port #\newline))
-  'done)
+  (put-string port (image-magic-number image))
+  (newline port)
+  (format port "~a ~a"
+	  (image-width image)
+	  (image-height image))
+  (newline port)
+  (array-for-each
+   (lambda (u8)
+     (put-u8 port u8))
+   (pbm-raster-to-u8-array
+    (image-raster image)))
+  (newline port))
