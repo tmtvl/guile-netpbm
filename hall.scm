@@ -9,7 +9,13 @@
   (home-page "")
   (license gpl3+)
   (dependencies `())
-  (files (libraries ())
+  (files (libraries
+           ((directory
+              "netpbm"
+              ((scheme-file "ppm")
+               (scheme-file "pgm")
+               (scheme-file "pbm")
+               (scheme-file "image")))))
          (tests ())
          (programs ())
          (documentation
