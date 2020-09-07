@@ -9,13 +9,7 @@
   (home-page "")
   (license gpl3+)
   (dependencies `())
-  (files (libraries
-           ((directory
-              "guile-netpbm"
-              ((scheme-file "image")
-               (scheme-file "ppm")
-               (scheme-file "pgm")
-               (scheme-file "pbm")))))
+  (files (libraries ())
          (tests ())
          (programs ())
          (documentation
