@@ -10,7 +10,8 @@
   (license gpl3+)
   (dependencies `())
   (files (libraries
-           ((directory
+           ((scheme-file "netpbm")
+            (directory
               "netpbm"
               ((scheme-file "ppm")
                (scheme-file "pgm")
