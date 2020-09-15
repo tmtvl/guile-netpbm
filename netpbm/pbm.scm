@@ -2,7 +2,7 @@
   #:use-module (ice-9 binary-ports)
   #:use-module (ice-9 textual-ports)
   #:use-module (netpbm image)
-  #:export (make-pbm-image write-pbm-image))
+  #:export (make-pbm-image pbm-image? write-pbm-image))
 
 (define *pbm-magic-number* "P4")
 
@@ -12,6 +12,9 @@
 	      height
 	      #f
 	      (make-array #f height width)))
+
+(define (pbm-image? image)
+  (string= (image-magic-number image) *pbm-magic-number*))
 
 (define (bools-to-u8s bools nums)
   (do ((i 0 (1+ i))

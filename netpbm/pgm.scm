@@ -3,7 +3,7 @@
   #:use-module (ice-9 textual-ports)
   #:use-module (netpbm image)
   #:use-module (rnrs bytevectors)
-  #:export (make-pgm-image write-pgm-image))
+  #:export (make-pgm-image pgm-image? write-pgm-image))
 
 (define *pgm-magic-number* "P5")
 
@@ -16,6 +16,9 @@
 		(make-array
 		 (make-bytevector bv-size 0)
 		 height width))))
+
+(define (pgm-image? image)
+  (string= (image-magic-number image) *pgm-magic-number*))
 
 (define (write-pgm-image image port)
   (put-string port (image-magic-number image))
