@@ -1,5 +1,8 @@
 (define-module (netpbm)
   #:use-module (netpbm image)
+  #:use-module (netpbm pbm)
+  #:use-module (netpbm pgm)
+  #:use-module (netpbm ppm)
   #:use-module (srfi srfi-1)
   #:export (draw-point
 	    draw-line
@@ -31,14 +34,34 @@
 					   (list 0 dist))
 			color)))
 	(else
-	 (error "Not yet implemented")
-	 (let ((points (find-points start-x end-x start-y end-y)))
-	   (array-fill! (make-shared-array (image-raster image)
-					   (lambda (i)
-					     (vector-ref points i))
-					   (list 0 (vector-length
-						    points)))
-			color)))))
+         (let* ((x-offset (min start-x end-x))
+		(y-offset (min start-y end-y))
+		(x-dist (abs (- end-x start-x)))
+		(y-dist (abs (- end-y start-y)))
+		(points (lset-union
+			 equal?
+			 (map
+			  (lambda (x)
+			    (list (+ (round (* (/ x x-dist)
+					       y-dist))
+				     y-offset)
+				  (+ x x-offset)))
+			  (iota x-dist))
+			 (map
+			  (lambda (y)
+			    (list (+ y y-offset)
+				  (+ (round (* (/ y y-dist)
+					       x-dist))
+				     x-offset)))
+			  (iota y-dist)))))
+	   (array-fill!
+	    (make-shared-array (image-raster image)
+			       (lambda (i)
+				 (let ((coords (car points)))
+				   (set! points (cdr points))
+				   coords))
+			       (list 0 (length points)))
+	    color)))))
 
 (define (draw-rectangle image start-x start-y end-x end-y color)
   (cond ((and (= start-x end-x)
@@ -59,3 +82,15 @@
 					   (list 0 y-dist)
 					   (list 0 x-dist))
 			color)))))
+
+(define (write-image image filename)
+  (call-with-output-file filename
+    (lambda (port)
+      (cond ((pbm-image? image)
+	     (write-pbm-image image port))
+	    ((pgm-image? image)
+	     (write-pgm-image image port))
+	    ((ppm-image? image)
+	     (write-ppm-image image port))
+	    (else (error "Unknown image type" image))))
+    #:binary #t))
