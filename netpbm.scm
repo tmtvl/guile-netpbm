@@ -6,7 +6,8 @@
   #:use-module (srfi srfi-1)
   #:export (draw-point
 	    draw-line
-	    draw-rectangle))
+	    draw-rectangle
+	    write-image))
 
 (define (draw-point image x y color)
   (array-set! (image-raster image) color y x))

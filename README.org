@@ -9,14 +9,15 @@
 * Usage
 
 #+BEGIN_SRC scheme
-  (use-module (netpbm pbm))
+  (use-module (netpbm) (netpbm pbm))
 
   (define my-image (make-pbm-image 100 100))
 
   ;; Do some drawing
 
-  (call-with-output-file
-      filename
-    (lambda (p)
-      (write-pbm-image my-image p)))
+  (write-image my-image "/path/to/destination.pbm")
 #+END_SRC
+
+* Known bugs
+
+  - The .pbm format doesn't like a width greater than or equal to 560 bits.
