@@ -34,34 +34,30 @@
 					   (list 0 dist))
 			color)))
 	(else
-         (let* ((x-offset (min start-x end-x))
-		(y-offset (min start-y end-y))
-		(x-dist (abs (- end-x start-x)))
-		(y-dist (abs (- end-y start-y)))
+         (let* ((x-dist (- end-x start-x))
+		(y-dist (- end-y start-y))
 		(points (lset-union
 			 equal?
 			 (map
 			  (lambda (x)
-			    (list (+ (round (* (/ x x-dist)
-					       y-dist))
-				     y-offset)
-				  (+ x x-offset)))
-			  (iota x-dist))
+			    (list (+ start-x x)
+				  (+ start-y
+				     (round (/ (* x y-dist)
+					       x-dist)))))
+			  (iota (1+ (abs x-dist))
+				(min 0 x-dist)))
 			 (map
 			  (lambda (y)
-			    (list (+ y y-offset)
-				  (+ (round (* (/ y y-dist)
-					       x-dist))
-				     x-offset)))
-			  (iota y-dist)))))
-	   (array-fill!
-	    (make-shared-array (image-raster image)
-			       (lambda (i)
-				 (let ((coords (car points)))
-				   (set! points (cdr points))
-				   coords))
-			       (list 0 (length points)))
-	    color)))))
+			    (list (+ start-x
+				     (round (/ (* y x-dist)
+					       y-dist)))
+				  (+ start-y y)))
+			  (iota (1+ (abs y-dist))
+				(min 0 y-dist))))))
+	   (for-each
+	    (lambda (p)
+	      (draw-point image (car p) (cadr p) color))
+	    points)))))
 
 (define (draw-rectangle image start-x start-y end-x end-y color)
   (cond ((and (= start-x end-x)
