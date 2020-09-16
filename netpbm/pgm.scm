@@ -3,7 +3,8 @@
   #:use-module (ice-9 textual-ports)
   #:use-module (netpbm image)
   #:use-module (rnrs bytevectors)
-  #:export (make-pgm-image pgm-image? write-pgm-image))
+  #:export (make-pgm-image pgm-image? write-pgm-image
+			   rat->pgm-color))
 
 (define *pgm-magic-number* "P5")
 
@@ -19,6 +20,19 @@
 
 (define (pgm-image? image)
   (string= (image-magic-number image) *pgm-magic-number*))
+
+(define (rat->pgm-color image rat)
+  (let ((cv (round (* (if (inexact? rat)
+			  (inexact->exact rat)
+			  rat)
+		      (image-maxval image)))))
+    (if (> (image-maxval image) 255)
+	(let ((bv (make-bytevector 2)))
+	  (bytevector-u16-native-set! bv 0 cv)
+	  bv)
+	(let ((bv (make-bytevector 1)))
+	  (bytevector-u8-set! bv 0 cv)
+	  bv))))
 
 (define (write-pgm-image image port)
   (put-string port (image-magic-number image))

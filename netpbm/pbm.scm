@@ -2,9 +2,13 @@
   #:use-module (ice-9 binary-ports)
   #:use-module (ice-9 textual-ports)
   #:use-module (netpbm image)
-  #:export (make-pbm-image pbm-image? write-pbm-image))
+  #:export (make-pbm-image pbm-image? write-pbm-image
+			   pbm-black pbm-white))
 
 (define *pbm-magic-number* "P4")
+
+(define pbm-black #t)
+(define pbm-white #f)
 
 (define (make-pbm-image width height)
   (make-image *pbm-magic-number*
